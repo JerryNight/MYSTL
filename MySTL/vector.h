@@ -48,7 +48,27 @@ public:
     vector& operator=(const vector& rhs);
     vector& operator=(vector&& rhs);
     // 析构
-    ~vector()
+    ~vector(__destroy_and_deallocate();)
+
+public:
+    // 迭代器相关操作
+    iterator begin() {return start_;}
+    const_iterator begin()const {return start_;}
+    iterator end() {return end_;}
+    const_iterator end()const {return end_;}
+    reverse_iterator rbegin() {return reverse_iterator(end());}
+    const_reverse_iterator rbegin()const {return const_reverse_iterator(end());}
+    reverse_iterator rend() {return reverse_iterator(begin());}
+    const_reverse_iterator rend()const {return const_reverse_iterator(begin());}
+    // 容量相关操作
+    bool empty()const {return begin() == end();}
+    size_type size()const {return static_cast<size_type>(end() - begin());}
+    size_type max_size()const {return static_cast<size_type>(-1) / sizeof(T);}
+    size_type capacity()const {return static_cast<size_type>(end_of_storage_ - start_);}
+    void shrink_to_fit();
+    void reserve(size_type n); 
+
+
 
 private:
     // 如果是数值类型，用此函数初始化
@@ -99,9 +119,6 @@ vector<T, Alloc>& vector<T, Alloc>::operator=(const vector& rhs){}
 template <class T, class Alloc>
 vector<T, Alloc>& vector<T, Alloc>::operator=(vector&& rhs){}
 
-// 析构
-template <class T, class Alloc>
-vector<T, Alloc>::~vector(){}
 
 } // namespace mystl
 
