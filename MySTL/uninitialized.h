@@ -16,25 +16,6 @@ namespace mystl
 // 把[first, last)上的内容复制到以 result 为起始处的空间，返回一个迭代器指向复制结束的尾部
 /*****************************************************************************************/
 template <class InputIterator, class ForwardIterator>
-inline ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result)
-{
-    return mystl::__uninitialized_copy(first, last, result, value_type(result));
-}
-
-template <class InputIterator, class ForwardIterator, class T>
-inline ForwardIterator __uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result, T*)
-{
-    typedef typename __type_traits<T>::is_POD_type PODType;
-    return mystl::__uninitialized_copy_aux(first, last, result, PODType());
-}
-
-template <class InputIterator, class ForwardIterator>
-inline ForwardIterator __uninitialized_copy_aux(InputIterator first, InputIterator last, ForwardIterator result, __true_type)
-{
-    return mystl::copy(first, last, result);
-}
-
-template <class InputIterator, class ForwardIterator>
 inline ForwardIterator __uninitialized_copy_aux(InputIterator first, InputIterator last, ForwardIterator result, __false_type)
 {
     auto cur = result;
@@ -45,6 +26,25 @@ inline ForwardIterator __uninitialized_copy_aux(InputIterator first, InputIterat
         ++cur;
     }
     return cur;
+}
+
+template <class InputIterator, class ForwardIterator>
+inline ForwardIterator __uninitialized_copy_aux(InputIterator first, InputIterator last, ForwardIterator result, __true_type)
+{
+    return mystl::copy(first, last, result);
+}
+
+template <class InputIterator, class ForwardIterator, class T>
+inline ForwardIterator __uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result, T*)
+{
+    typedef typename __type_traits<T>::is_POD_type PODType;
+    return mystl::__uninitialized_copy_aux(first, last, result, PODType());
+}
+
+template <class InputIterator, class ForwardIterator>
+inline ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result)
+{
+    return mystl::__uninitialized_copy(first, last, result, value_type(result));
 }
 
 // 针对 char*  wchar* 的函数重载
@@ -114,8 +114,6 @@ template <class ForwardIterator, class Size, class T>
 inline ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n, const T& x) {
     return mystl::__uninitialized_fill_n(first, n, x, value_type(first));
 }
-
-
 
 
 } // namespace mystl

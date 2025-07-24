@@ -7,6 +7,9 @@
         "unordered_map": "cpp",
         "vector": "cpp",
         "string_view": "cpp",
-        "initializer_list": "cpp"
-    }
+        "initializer_list": "cpp",
+        "span": "cpp",
+        "utility": "cpp"
+    },
+    "cmake.sourceDirectory": "/home/liyongtao/cpp/mystl_v1/MySTL/test"
 }

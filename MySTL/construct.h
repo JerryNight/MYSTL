@@ -13,14 +13,14 @@ namespace mystl
 template <class T>
 inline void construct(T* p)
 {
-    new (static_cast<void*>p) T();
+    new (static_cast<void*>(p)) T();
 }
 
 // construct版本2：接受一个指针和初始化值
 template <class T1, class T2>
 inline void construct(T1* p,const T2& value)
 {
-    new (static_cast<void*>p) T(value);
+    new (static_cast<void*>(p)) T1(value);
 }
 
 // destroy版本1: 接收一个指针。显式调用对象的析构函数

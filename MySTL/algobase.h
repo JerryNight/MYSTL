@@ -10,14 +10,14 @@ namespace mystl
 {
 // max: 返回两个参数的较大值
 template<class T>
-inline const T& max(T& lhs, T& rhs)
+inline const T& max(const T& lhs, const T& rhs)
 {
     return lhs > rhs ? lhs : rhs;
 }
 
 // max重载：使用传入的比较器
 template<class T, class Compare>
-inline const T& max(T& lhs, T& rhs, Compare comp)
+inline const T& max(const T& lhs, const T& rhs, Compare comp)
 {
     return comp(lhs, rhs) ? lhs : rhs;
 }

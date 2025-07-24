@@ -48,14 +48,14 @@ public:
     vector& operator=(const vector& rhs);
     vector& operator=(vector&& rhs);
     // 析构
-    ~vector(__destroy_and_deallocate();)
+    ~vector() {__destroy_and_deallocate();}
 
 public:
     // 迭代器相关操作
     iterator               begin()        {return start_;}
     const_iterator         begin()  const {return start_;}
-    iterator               end()          {return end_;}
-    const_iterator         end()    const {return end_;}
+    iterator               end()          {return finish_;}
+    const_iterator         end()    const {return finish_;}
     reverse_iterator       rbegin()       {return reverse_iterator(end());}
     const_reverse_iterator rbegin() const {return const_reverse_iterator(end());}
     reverse_iterator       rend()         {return reverse_iterator(begin());}
@@ -90,7 +90,7 @@ public:
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last);
 
-    void push_back(const value_type* value);
+    void push_back(const value_type& value);
     void ppo_back();
 
     iterator insert(iterator position);
@@ -105,7 +105,7 @@ public:
 
     void     resize(size_type new_size) { return resize(new_size, value_type()); }
     void     resize(size_type new_size, const value_type& value);
-    void     reverse() { mystl::reverse(begin(),end()); }
+    // void     reverse() { mystl::reverse(begin(),end()); }
     void     swap(vector& rhs);
 
 private:
@@ -165,7 +165,7 @@ template <class InputIterator>
 vector<T, Alloc>::vector(InputIterator first, InputIterator last)
 {
     typedef typename __is_integer<InputIterator>::is_integer Integer;
-    __vector_initialize(first, last, Integer);
+    __vector_initialize(first, last, Integer());
 }
 
 // 拷贝构造
@@ -267,7 +267,7 @@ void vector<T, Alloc>::assign(InputIterator first, InputIterator last)
 
 // push_back
 template <class T, class Alloc>
-void vector<T, Alloc>::push_back(const value_type* value)
+void vector<T, Alloc>::push_back(const value_type& value)
 {
     if (finish_ != end_of_storage_)
     {
@@ -286,10 +286,10 @@ void vector<T, Alloc>::ppo_back()
 }
 
 template <class T, class Alloc>
-vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator position, const value_type& value)
+typename vector<T, Alloc>::iterator vector<T, Alloc>::insert(iterator position, const value_type& value)
 {
     auto n = position - start_;
-    if (finishi_ != end_of_storage_ && position == finish_)
+    if (finish_ != end_of_storage_ && position == finish_)
     {
         mystl::construct(finish_, value);
         ++finish_;
@@ -314,7 +314,7 @@ void vector<T, Alloc>::insert(iterator position, InputIterator first, InputItera
 }
 
 template <class T, class Alloc>
-vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator position)
+typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator position)
 {
     if (position != finish_ - 1)
         mystl::copy(position + 1, finish_, position);
@@ -325,7 +325,7 @@ vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator position)
 
 // 1,2,3,4,5,6,7,8,9   [5,8) -> 1,2,3,4,8,9,0,0,0 
 template <class T, class Alloc>
-vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first, iterator last)
+typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first, iterator last)
 {
     auto p = mystl::copy(last, finish_, first);
     mystl::destroy(p, finish_);
@@ -612,7 +612,7 @@ void vector<T, Alloc>::__range_insert(iterator position, ForwardIterator first, 
         else {                                            // 备用空间不足
             // 新长度在 旧长度的两倍，旧长度 + 新增元素个数 中取较大值
             const auto old_size = size();
-            const auto len = old_size + mystl::max(old_size, static_cast<size_type>(n));
+            const auto len = old_size + mystl::max(static_cast<size_type>(old_size), static_cast<size_type>(n));
             auto new_start = data_allocator::allocate(len);
             auto new_finish = new_start;
             try {

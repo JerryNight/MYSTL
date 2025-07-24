@@ -14,6 +14,57 @@ struct forward_iterator_tag : public input_iterator_tag {};
 struct bidirectional_iterator_tag : public forward_iterator_tag {};
 struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
+// input_iterator
+template <class T, class Distance>
+struct input_iterator {
+    typedef input_iterator_tag          iterator_category;
+    typedef T                           value_type;
+    typedef Distance                    difference_type;
+    typedef T*                          pointer;
+    typedef T&                          reference;
+};
+
+// output_iterator
+template <class T, class Distance>
+struct output_iterator {
+    typedef output_iterator_tag         iterator_category;
+    typedef T                           value_type;
+    typedef Distance                    difference_type;
+    typedef T*                          pointer;
+    typedef T&                          reference;
+};
+
+// forward_iterator
+template <class T, class Distance>
+struct forward_iterator {
+    typedef forward_iterator_tag        iterator_category;
+    typedef T                           value_type;
+    typedef Distance                    difference_type;
+    typedef T*                          pointer;
+    typedef T&                          reference;
+};
+
+// bidirectional_iterator
+template <class T, class Distance>
+struct bidirectional_iterator {
+    typedef bidirectional_iterator_tag  iterator_category;
+    typedef T                           value_type;
+    typedef Distance                    difference_type;
+    typedef T*                          pointer;
+    typedef T&                          reference;
+};
+
+// random_access_iterator
+template <class T, class Distance>
+struct random_access_iterator {
+    typedef random_access_iterator_tag  iterator_category;
+    typedef T                           value_type;
+    typedef Distance                    difference_type;
+    typedef T*                          pointer;
+    typedef T&                          reference;
+};
+
+
 // 通用迭代器模版：迭代器一般包含五个特征：迭代器类型、数据类型、数据指针、数据引用、迭代器之间的距离
 template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
 struct iterator
@@ -109,13 +160,6 @@ __distance(RandomAccessIterator first, RandomAccessIterator last, random_access_
     return last - first;
 }
 
-// 迭代器前进n个距离
-template <class InputIterator, class Distance>
-inline void advance(InputIterator& i, Distance n)
-{
-    __advence(i, n, iterator_category(i));
-}
-
 // advance 的 input_iterator_tag 的版本
 template <class InputIterator, class Distance>
 inline void __advance(InputIterator& i, Distance n, input_iterator_tag) 
@@ -136,6 +180,13 @@ template <class RandomAccessIterator, class Distance>
 inline void __advance(RandomAccessIterator& i, Distance n, random_access_iterator_tag) 
 {
     i += n;
+}
+
+// 迭代器前进n个距离
+template <class InputIterator, class Distance>
+inline void advance(InputIterator& i, Distance n)
+{
+    __advance(i, n, iterator_category(i));
 }
 
 } // namespace mystl
