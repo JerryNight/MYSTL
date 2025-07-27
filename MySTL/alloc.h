@@ -54,14 +54,13 @@ void* alloc::allocate(size_t n)
 {
     if (n > EMaxBytes)
         return std::malloc(n);
-    FreeList* my_free_list = free_list[freelist_index(n)];
-    FreeList* result = my_free_list;
+    FreeList* result = free_list[freelist_index(n)];
     if (result == nullptr)
     {
         void* re = refill(round_up(n));
         return re;
     }
-    my_free_list = my_free_list->next;
+    free_list[freelist_index(n)] = result->next;
     return result;
 }
 

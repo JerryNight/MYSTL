@@ -1,10 +1,7 @@
 #ifndef MYSTL_VECTOR_H_
 #define MYSTL_VECTOR_H_
 
-#include "iterator.h"
-#include "memory.h"
-
-
+#include "mystl.h"
 
 namespace mystl
 {

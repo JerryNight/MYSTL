@@ -9,7 +9,9 @@
         "string_view": "cpp",
         "initializer_list": "cpp",
         "span": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "memory_resource": "cpp",
+        "sstream": "cpp"
     },
     "cmake.sourceDirectory": "/home/liyongtao/cpp/mystl_v1/MySTL/test"
 }

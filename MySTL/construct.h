@@ -38,7 +38,7 @@ inline void destroy(ForwardIterator first,ForwardIterator last)
 }
 
 template <class ForwardIterator, class T>
-inline void destroy(ForwardIterator first,ForwardIterator last, T*)
+inline void __destroy(ForwardIterator first,ForwardIterator last, T*)
 {
     typedef typename __type_traits<T>::has_trivial_destructor TrivalDestructor;
     return __destroy_aux(first, last, TrivalDestructor());

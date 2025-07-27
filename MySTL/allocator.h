@@ -45,7 +45,7 @@ template <class T, class Alloc>
 void allocator<T, Alloc>::deallocate(T* ptr)
 {   
     if (!ptr) return;
-    Alloc::deallocate(ptr);
+    Alloc::deallocate(ptr, sizeof(T));
 }
 
 // allocator 版本二：参数为对象的个数

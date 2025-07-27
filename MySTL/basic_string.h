@@ -1,9 +1,7 @@
 #ifndef MYSTL_BASIC_STRING_H_
 #define MYSTL_BASIC_STRING_H_
 
-#include "iterator.h"
-#include "memory.h"
-#include "type_traits.h"
+#include "mystl.h"
 
 namespace mystl
 {
@@ -143,6 +141,10 @@ public:
     template <class InputIterator>
     void add_front(InputIterator first, InputIterator last) { insert(begin(), first, last); }
 
+    // 增加cpp文档里已有的接口
+    void push_back(value_type ch);
+    void pop_back();
+
     // basic_string 相关操作
     difference_type compare(const basic_string& other)        const;
     basic_string    substr(size_type index);
@@ -165,7 +167,7 @@ public:
     size_type       rfind(const basic_string& str)            const;
     size_type       count(value_type ch)                      const;
     size_type       count(value_type ch, size_type index)     const;
-    void            reverse() { mystl::reverse(begin(), end()); }
+    //void            reverse() { mystl::reverse(begin(), end()); }
     void            swap(basic_string& rhs);
 
     // 重载 operator+= 
@@ -359,6 +361,36 @@ void basic_string<CharType, CharTraits, Alloc>::add_back(const_pointer str, size
 template<class CharType, class CharTraits, class Alloc>
 void basic_string<CharType, CharTraits, Alloc>::add_front(const_pointer str, size_type count) {
     insert(begin(), str, str + count);
+}
+
+template<class CharType, class CharTraits, class Alloc>
+void basic_string<CharType, CharTraits, Alloc>::push_back(value_type ch)
+{
+    // 空间已满
+    if (finish_ == end_)
+    {
+        auto old_len = size();
+        auto new_len = old_len << 1;
+        auto new_buffer = __get_buffer(new_len);
+        mystl::uninitialized_copy(buffer_, finish_, new_buffer);
+        mystl::uninitialized_fill_n(new_buffer + old_len, 1, ch);
+        __put_buffer(buffer_);
+        buffer_ = new_buffer;
+        finish_ = new_buffer + old_len + 1;
+        end_ = new_buffer + new_len;
+    } else {
+        // 空间未满
+        mystl::uninitialized_fill_n(finish_, 1, ch);
+        ++finish_;
+    }
+}
+
+template<class CharType, class CharTraits, class Alloc>
+void basic_string<CharType, CharTraits, Alloc>::pop_back()
+{
+    // 删除最后一个元素 == erase(end() - 1) 删除finish_前一个位置的元素
+    --finish_;
+    mystl::destroy(finish_);
 }
 
 // 比较两个 basic_string，小于返回一个负数，大于返回一个正数，等于返回 0
