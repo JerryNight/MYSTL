@@ -1,5 +1,6 @@
 # MYSTL
 This is a minimal version of STL, it is just for practice.
+这是一个简易版的STL，用来练习c++，项目包含完整注释。
 
 项目目录：
 MySTL-v1(PROJECT_DIR):
